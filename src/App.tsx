@@ -7,8 +7,6 @@ import MealDetails from "./components/MealDetails/MealDetails.tsx";
 import SelectedMeals from "./components/SelectedMeals/SelectedMeals.tsx";
 
 function App() {
-
-    console.log(import.meta.env);
   return (
       <BrowserRouter>
           <div className="flex flex-col min-h-screen justify-between">
