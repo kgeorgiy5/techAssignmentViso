@@ -14,13 +14,13 @@ const CategoriesDropdown = () => {
     });
 
     return (
-        <div className="absolute z-40 bg-white m-auto w-full p-8 box-border shadow-2xl rounded mt-2">
+        <div className="absolute z-20 bg-white m-auto w-full p-8 box-border shadow-2xl rounded mt-2">
             {isError ? (
                 <p>An error occurred while fetching categories</p>
             ) : isLoading ? (
                 <p>Loading categories...</p>
             ) : data && data.length > 0 ? (
-                <ul className="grid grid-cols-2 gap-2 overflow-auto">
+                <ul className="grid grid-cols-3 gap-2 overflow-auto h-[50vh]">
                     {data.map((category: ICategory) => (
                         <CategoryButton category={category} key={category.idCategory}/>
                     ))}

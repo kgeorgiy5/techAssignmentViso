@@ -38,13 +38,13 @@ const PageControl:FC = () => {
 
             if(pages.currentPage > 7 && pages.currentPage !== pages.numberOfPages){
                 pageButtons.push(
-                    <span>...</span>,
+                    <span key={"additional-span"}>...</span>,
                     <PageButton key={pages.currentPage} number={pages.currentPage}/>,
                 )
             }
 
             pageButtons.push(
-                <span>...</span>,
+                <span key={"span"}>...</span>,
                 <PageButton key={pages.numberOfPages} number={pages.numberOfPages}/>
             )
         }
@@ -61,12 +61,7 @@ const PageControl:FC = () => {
                 <>
                     {pageButtons.length > 3 ? (
                         <div className="align-middle items-center mx-auto mt-8 flex flex-row gap-1">
-                            {pageButtons.map(pageButton => (
-                                <>
-                                    {pageButton}
-                                </>
-                                )
-                            )}
+                            {pageButtons}
                         </div>
                     ) : null}
                 </>

@@ -4,6 +4,7 @@ import {RootState} from "../../store.ts";
 import {ISelectedMeal} from "../../types.ts";
 import Button from "../Button.tsx";
 import {clearSelected} from "../../reducers/selectedReducer.ts";
+import Error from "../Error.tsx";
 
 const SelectedMeals:FC = () => {
     const meals = useSelector((state:RootState) => state.selected.meals);
@@ -31,7 +32,7 @@ const SelectedMeals:FC = () => {
                             ))}
                         </ul>
                     ) : (
-                        <p>No recipes selected</p>
+                        <Error>No recipes were found</Error>
                     )}
             {ingredients.length > 0 ? (
                 <div className="flex flex-col gap-2">
@@ -45,7 +46,7 @@ const SelectedMeals:FC = () => {
                     </div>
                 </div>
             ) : (
-                <p>No ingredients found</p>
+                <Error>No ingredients were found</Error>
             )}
         </main>
     )

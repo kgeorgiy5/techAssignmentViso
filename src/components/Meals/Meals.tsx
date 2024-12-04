@@ -1,18 +1,25 @@
 import {FC, useEffect, useMemo} from "react";
-import {IMeal} from "../../types.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../store.ts";
-import Meal from "./Meal.tsx";
-import FilterBar from "./FilterBar.tsx";
 import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
+
+import {IMeal} from "../../types.ts";
+import Meal from "./Meal.tsx";
+import FilterBar from "./FilterBar.tsx";
+import {RootState} from "../../store.ts";
 import PageControl from "./PageControl.tsx";
-import {setNumberOfPages, setPage} from "../../reducers/paginationReducer.ts";
+import {setPage} from "../../reducers/paginationReducer.ts";
+import usePaginate from "../../hooks/usePaginate.ts";
+import useFilter from "../../hooks/useFilter.ts";
+import Loading from "../Loading.tsx";
+import Error from "../Error.tsx";
 
 const Meals:FC = () => {
     const dispatch = useDispatch();
+    const paginate = usePaginate<IMeal>(9);
     const search = useSelector((state:RootState) => state.filter.search);
     const category = useSelector((state:RootState) => state.filter.category);
+    const filterByCategory = useFilter(category);
     const currentPage = useSelector((state:RootState) => state.page.currentPage);
     const { data, isLoading, isError} = useQuery({
         queryKey:["mealsData", search, category],
@@ -38,7 +45,6 @@ const Meals:FC = () => {
                         meals.push(...res.data.meals);
                     }
                 }
-
                 return meals;
             } catch(err){
                 console.log(err);
@@ -51,26 +57,11 @@ const Meals:FC = () => {
     }, [search, category]);
 
     const paginatedMeals = useMemo(() => {
-        if (!data || data.length === 0) {
-            dispatch(setNumberOfPages(0));
-            return [];
-        }
+        if(!data) return [];
 
-        const filteredMeals = category
-            ? data.filter((meal: IMeal) => meal.strCategory === category)
-            : data;
-
-        const mealsPerPage = 6;
-        const pages: IMeal[][] = [];
-
-        for (let i = 0; i < filteredMeals.length; i += mealsPerPage) {
-            pages.push(filteredMeals.slice(i, i + mealsPerPage));
-        }
-
-        dispatch(setNumberOfPages(pages.length));
-
-        return pages;
-    }, [data, category, dispatch]);
+        const filteredMeals = filterByCategory(data);
+        return paginate(filteredMeals);
+    }, [filterByCategory, data, paginate]);
 
     return(
         <main className="w-[60%] min-h-screen justify-between flex flex-col mx-auto pt-4 gap-2">
@@ -87,24 +78,22 @@ const Meals:FC = () => {
                                                 <Meal key={meal.idMeal} meal={meal}/>
                                             ))}
                                         </ul>
+                                        <PageControl/>
                                     </>
 
                                 ) : (
-                                    <p>No meals found</p>
+                                    <Error>No meals were found</Error>
                                 )
                                 }
                             </>
                         ) : (
-                            <p>Loading...</p>
+                            <Loading/>
                         )}
                     </>
                 ) : (
-                    <div>
-                        <p>An error occurred while loading</p>
-                    </div>
+                    <Error>An error occurred while loading meals</Error>
                 )}
             </div>
-            <PageControl/>
         </main>
     )
 };

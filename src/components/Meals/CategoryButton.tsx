@@ -19,6 +19,7 @@ const CategoryButton:FC<CategoryButtonProps> = ({category}) => {
 
     return(
         <Button disabled={currentCategory === category.strCategory} onClick={handleClick}>
+            <img src={category.strCategoryThumb} alt={category.strCategory} className="aspect-square object-cover"/>
             {category.strCategory}
         </Button>
     )

@@ -3,6 +3,8 @@ import {useQuery} from "@tanstack/react-query";
 import axios from "axios";
 import {useParams} from "react-router-dom";
 import parseIngredients from "../../utils/parseIngredients.ts";
+import Loading from "../Loading.tsx";
+import Error from "../Error";
 
 const MealDetails:FC = () => {
     const id = useParams().id;
@@ -18,7 +20,6 @@ const MealDetails:FC = () => {
         }
     })
 
-    console.log(ingredients);
     return(
         <main className="w-[60%] mx-auto pt-4">
             {!isError ? (
@@ -54,11 +55,11 @@ const MealDetails:FC = () => {
                             )}
                         </div>
                     ) : (
-                        <p>Loading...</p>
+                        <Loading/>
                     )}
                 </>
             ) : (
-                <p>An error occurred while loading meal details</p>
+                <Error>An error occurred while loading meal details</Error>
             )}
         </main>
     )
